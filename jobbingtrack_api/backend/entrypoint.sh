@@ -6,7 +6,7 @@ echo "⏳ Attente de PostgreSQL..."
 echo "✅ Base PostgreSQL prête. Migration..."
 python manage.py migrate
 
-python -m pip install --upgrade pip 
+python -m pip install --upgrade pip --broke-system-packages
 echo "🛠️ Création du superutilisateur si inexistant..."
 python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
