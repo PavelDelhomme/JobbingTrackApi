@@ -3,9 +3,10 @@ from django.db import models
 from common.models.base import BaseModel
 
 class Candidature(BaseModel):
-    user = models.ForeignKey("authentication.User", on_delete=models.SET_NULL)
+    user_id = models.UUIDField()
+    candidature_id = models.UUIDField()
+    company_id = models.UUIDField(null=True, blank=True)
     title = models.CharField(max_length=255)
-    company = models.ForeignKey("entreprises.Entreprise", on_delete=models.SET_NULL)
     application_date = models.DateTimeField()
     platform = models.CharField(max_length=100, null=True, blank=True)
     contract_type = models.CharField(max_length=100, null=True, blank=True)
@@ -15,8 +16,8 @@ class Candidature(BaseModel):
     notes = models.TextField(null=True, blank=True)
 
 class CandidatureContact(models.Model):
-    candidature = models.ForeignKey("candidatures.Candidature", on_delete=models.SET_NULL)
-    contact = models.ForeignKey("contacts.Contact", on_delete=models.SET_NULL)
+    candidature_id = models.UUIDField()
+    contact_id = models.UUIDField()
 
     class Meta:
-        unique_together = ("candidature", "contact")
+        unique_together = ("candidature_id", "contact_id")

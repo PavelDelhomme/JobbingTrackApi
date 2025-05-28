@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'api.evenements',
     'api.profiles',
     'api.relances',
-    'api.users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

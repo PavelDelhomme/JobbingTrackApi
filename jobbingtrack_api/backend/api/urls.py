@@ -8,6 +8,5 @@ urlpatterns = [
     path('evenements/', include('api.evenements.urls')),
     path('contacts/', include('api.contacts.urls')),
     path('appels/', include('api.appels.urls')),
-    path('users/', include('api.users.urls')),
     path('profiles/', include('api.profiles.urls')),
 ]
