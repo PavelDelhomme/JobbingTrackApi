@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class EntretiensTmpConfig(AppConfig):
+class EntretiensConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'entretiens'
+    name = 'api.entretiens'

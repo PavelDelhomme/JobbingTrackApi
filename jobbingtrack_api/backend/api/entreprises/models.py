@@ -1,9 +1,8 @@
 from django.db import models
 from common.models.base import BaseModel
-from users.models import User
 
 class Entreprise(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL)
+    user_id = models.UUIDField(db_index=True)  # lien utilisateur
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=100, null=True, blank=True)
     phone = models.CharField(max_length=50, null=True, blank=True)

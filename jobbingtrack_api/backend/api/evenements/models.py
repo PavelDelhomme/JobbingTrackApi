@@ -1,9 +1,8 @@
 from django.db import models
 from common.models.base import BaseModel
-from users.models import User
 
 class Event(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.UUIDField(db_index=True)  # lien utilisateur
     related_object_id = models.UUIDField(null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)

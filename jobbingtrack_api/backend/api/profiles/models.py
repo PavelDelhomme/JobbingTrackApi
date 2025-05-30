@@ -1,9 +1,8 @@
 from django.db import models
 from common.models.base import BaseModel
-from users.models import User
 
 class Profile(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.UUIDField(db_index=True)  # lien utilisateur
     subject = models.CharField(max_length=255)
     company_ids = models.TextField()
     contact_ids = models.TextField(null=True, blank=True)

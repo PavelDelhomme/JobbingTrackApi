@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CandidaturesTmpConfig(AppConfig):
+class CandidaturesConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'candidatures'
+    name = 'api.candidatures'

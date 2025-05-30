@@ -1,9 +1,8 @@
 from django.db import models
 from common.models.base import BaseModel
-from users.models import User
 
 class Entretien(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.UUIDField(db_index=True)  # lien utilisateur
     candidature = models.ForeignKey("candidatures.Candidature", on_delete=models.CASCADE)
     company = models.ForeignKey("entreprises.Entreprise", on_delete=models.CASCADE)
     date_time = models.DateTimeField()

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AppelsTmpConfig(AppConfig):
+class AppelsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'appels'
+    name = 'api.appels'

@@ -19,3 +19,5 @@ RUN ls
 
 RUN chmod +x ./scripts/wait-for-postgres.sh
 RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]

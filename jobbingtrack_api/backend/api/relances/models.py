@@ -2,7 +2,7 @@ from django.db import models
 from common.models.base import BaseModel
 
 class Relance(BaseModel):
-    user_id = models.UUIDField()
+    user_id = models.UUIDField(db_index=True)  # lien utilisateur
     candidature_id = models.UUIDField()
     entreprise_id = models.UUIDField()
     appel_id = models.UUIDField(null=True, blank=True)
