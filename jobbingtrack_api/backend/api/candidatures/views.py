@@ -1,10 +1,13 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import viewsets, permissions
+from .models import Candidature
+from .serializers import CandidatureSerializer
 
-class CandidatureList(APIView):
-    def get(self, request):
-        return Response({"message": "Liste des candidatures"})
+class CandidatureViewSet(viewsets.ModelViewSet):
+    serializer_class = CandidatureSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-class CandidatureDetail(APIView):
-    def get(self, request, pk):
-        return Response({"message": f"Détail de la candidature {pk}"})
+    def get_queryset(self):
+        return Candidature.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

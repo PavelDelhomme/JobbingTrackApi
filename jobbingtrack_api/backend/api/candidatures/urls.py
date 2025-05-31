@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
+from rest_framework.routers import DefaultRouter
+from .views import CandidatureViewSet
 
-urlpatterns = [
-    path('candidatures/', views.CandidatureList.as_view()),
-    path('candidatures/<int:pk>/', views.CandidatureDetail.as_view()),
-]
+router = DefaultRouter()
+router.register(r'', CandidatureViewSet, basename='candidatures')
+
+urlpatterns = router.urls
