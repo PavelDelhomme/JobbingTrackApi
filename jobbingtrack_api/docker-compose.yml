@@ -4,18 +4,12 @@ services:
   web:
     build: ./backend
     command: ["/app/entrypoint.sh"]
+    env_file:
+      - .env
     volumes:
       - ./backend:/app
     ports:
       - "8000:8000"
-    environment:
-      - DEBUG=1
-      - DJANGO_SUPERUSER_EMAIL=admin@delhomme.ovh
-      - DJANGO_SUPERUSER_PASSWORD=admin
-      - POSTGRES_DB=jobbingtrack
-      - POSTGRES_USER=jobbingtrack
-      - POSTGRES_PASSWORD=jobbingtrack
-      - DB_HOST=db
     depends_on:
       - db
   
@@ -23,9 +17,7 @@ services:
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_DB: jobbingtrack
-      POSTGRES_USER: jobbingtrack
-      POSTGRES_PASSWORD: jobbingtrack
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
