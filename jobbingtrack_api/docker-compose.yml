@@ -12,12 +12,12 @@ services:
       - "8000:8000"
     depends_on:
       - db
-  
+
   db:
     image: postgres:15
     restart: always
-    environment:
-      - .env
+    env_file:
+      - .env  # ✅ ici aussi
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
