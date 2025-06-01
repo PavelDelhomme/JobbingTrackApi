@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
+from rest_framework.routers import DefaultRouter
+from .views import EvenementViewSet
 
-urlpatterns = [
-    path('evenements/', views.EvenementList.as_view()),
-    path('evenements/<int:pk>/', views.EvenementDetail.as_view()),
-]
+router = DefaultRouter()
+router.register(r'', EvenementViewSet, basename='evenement')
+
+urlpatterns = router.urls

@@ -1,10 +1,16 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import viewsets, permissions
+from .models import Profile
+from .serializers import ProfileSerializer
 
-class ProfileList(APIView):
-    def get(self, request):
-        return Response({"message": "Liste des profils"})
+class ProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-class ProfileDetail(APIView):
-    def get(self, request, pk):
-        return Response({"message": f"Détail du profil {pk}"})
+    def get_queryset(self):
+        return Profile.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)

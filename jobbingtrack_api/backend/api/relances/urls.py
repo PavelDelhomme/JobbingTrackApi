@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
+from rest_framework.routers import DefaultRouter
+from .views import RelanceViewSet
 
-urlpatterns = [
-    path('relances/', views.RelanceList.as_view()),
-    path('relances/<int:pk>/', views.RelanceDetail.as_view()),
-]
+router = DefaultRouter()
+router.register(r'', RelanceViewSet, basename='relance')
+
+urlpatterns = router.urls

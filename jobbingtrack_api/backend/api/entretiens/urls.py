@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
+from rest_framework.routers import DefaultRouter
+from .views import EntretienViewSet
 
-urlpatterns = [
-    path('entretiens/', views.EntretienList.as_view()),
-    path('entretiens/<int:pk>/', views.EntretienDetail.as_view()),
-]
+router = DefaultRouter()
+router.register(r'', EntretienViewSet, basename='entretien')
+
+urlpatterns = router.urls
