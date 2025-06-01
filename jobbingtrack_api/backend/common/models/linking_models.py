@@ -92,6 +92,7 @@ class RelanceEvent(models.Model):
         unique_together = ("event_id", "relance_id")
 
 class AppelEvent(models.Model):
+    user_id = models.UUIDField(null=True, blank=True)
     event_id = models.UUIDField()
     appel_id = models.UUIDField()
     class Meta:
@@ -166,9 +167,3 @@ class RelanceAppel(models.Model):
     class Meta:
         unique_together = ("relance_id", "appel_id")
         
-
-class AppelEvent(models.Model):
-    event_id = models.UUIDField()
-    appel_id = models.UUIDField()
-    class Meta:
-        unique_together = ("event_id", "appel_id")

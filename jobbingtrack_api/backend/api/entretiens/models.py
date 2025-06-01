@@ -2,9 +2,9 @@ from django.db import models
 from common.models.base import BaseModel
 
 class Entretien(BaseModel):
-    user_id = models.UUIDField(db_index=True)
-    candidature_id = models.UUIDField()
-    entreprise_id = models.UUIDField()
+    user_id = models.UUIDField(db_index=True, null=True, blank=True)
+    candidature_id = models.UUIDField(null=True, blank=True)
+    entreprise_id = models.UUIDField(null=True, blank=True)
 
     date_time = models.DateTimeField()
     duration_minutes = models.IntegerField(null=True, blank=True)

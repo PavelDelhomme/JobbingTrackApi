@@ -5,13 +5,27 @@ from rest_framework.response import Response
 from django.utils.timezone import datetime
 from .models import Appel
 from .serializers import AppelSerializer
+from django.shortcuts import get_object_or_404
 
 class AppelViewSet(viewsets.ModelViewSet):
     serializer_class = AppelSerializer
     permissions_classes = [permissions.IsAuthenticated]
-
+        
     def get_queryset(self):
-        return Appel.objects.filter(user=self.request.user)
+        queryset = Appel.objects.filter(user=self.request.user)
+
+        candidature_id = self.request.query_params.get("candidature_id")
+        entreprise_id = self.request.query_params.get("entreprise_id")
+        relance_id = self.request.query_params.get("relance_id")
+
+        if candidature_id:
+            queryset = queryset.filter(candidature__candidature_id=candidature_id)
+        if entreprise_id:
+            queryset = queryset.filter(company__id=entreprise_id)
+        if relance_id:
+            queryset = queryset.filter(relance__id=relance_id)
+
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

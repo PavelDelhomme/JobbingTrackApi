@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Candidature, CandidatureContact
+from .models import Candidature
+from common.models.linking_models import CandidatureContact
 
 @admin.register(Candidature)
 class CandidatureAdmin(admin.ModelAdmin):
