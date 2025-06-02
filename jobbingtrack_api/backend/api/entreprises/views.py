@@ -12,6 +12,24 @@ class EntrepriseViewSet(viewsets.ModelViewSet):
         return Entreprise.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
+        data = self.request.data
+        company_name = data.get("companyName")
+        
+        entreprise, created = Entreprise.objects.get_or_create(
+            name = company_name,
+            defaults={
+                "user": self.request.user,
+                "type": data.get("companyType", ""),
+                "phone": data.get("companyPhone", ""),
+                "email": data.get("companyEmail", ""),
+                "hr_email": data.get("companyHrEmail", ""),
+                "address": data.get("companyAddress", ""),
+                "notes": data.get("companyNotes", ""),
+            }
+        )
+        
+        entreprise = serializer.save(user=self.request.user, entreprise=entreprise)
+                
         serializer.save(user=self.request.user)
 
     @action(detail=False, methods=["get"], url_path="archived")

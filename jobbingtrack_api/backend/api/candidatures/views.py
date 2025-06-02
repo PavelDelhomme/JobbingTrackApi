@@ -2,6 +2,8 @@ from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Candidature
+from api.entreprises.models import Entreprise
+from api.evenements.models import Event
 from .serializers import CandidatureSerializer
 
 class CandidatureViewSet(viewsets.ModelViewSet):
@@ -12,6 +14,33 @@ class CandidatureViewSet(viewsets.ModelViewSet):
         return Candidature.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
+        data = self.request.data
+        company_name = data.get("companyName")
+        
+        entreprise, created = Entreprise.objects.get_or_create(
+            name = company_name,
+            defaults={
+                "user": self.request.user,
+                "type": data.get("companyType", ""),
+                "phone": data.get("companyPhone", ""),
+                "email": data.get("companyEmail", ""),
+                "hr_email": data.get("companyHrEmail", ""),
+                "address": data.get("companyAddress", ""),
+                "notes": data.get("companyNotes", ""),
+            }
+        )
+        
+        candidature = serializer.save(user=self.request.user, entreprise=entreprise)
+        
+        Event.objects.create(
+            user=self.request.user,
+            title=data.get("title", "Candidature"),
+            description=f"Candidature '{candidature.title}' pour {entreprise.name}",
+            type="application",
+            related_object_id=candidature.id
+        )
+        
+        
         serializer.save(user=self.request.user)
 
     @action(detail=False, methods=["get"], url_path="archived")

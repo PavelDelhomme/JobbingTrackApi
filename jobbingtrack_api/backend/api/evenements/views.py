@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Event
 from .serializers import EvenementSerializer
+from api.entreprises.models import Entreprise
 
 class EvenementViewSet(viewsets.ModelViewSet):
     serializer_class = EvenementSerializer
