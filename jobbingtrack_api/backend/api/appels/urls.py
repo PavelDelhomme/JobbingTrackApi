@@ -1,13 +1,7 @@
-from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import AppelViewSet, AppelList, AppelDetail
+from .views import AppelViewSet
 
 router = DefaultRouter()
-router.register(r'', AppelViewSet, basename='appels')
+router.register(r'appels', AppelViewSet, basename='appels')
 
-urlpatterns = [
-    path('appels/list/', AppelList.as_view()),
-    path('appels/detail/<uuid:pk>/', AppelDetail.as_view()),
-]
-
-urlpatterns += router.urls
+urlpatterns = router.urls

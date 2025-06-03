@@ -12,18 +12,18 @@ class AppelViewSet(viewsets.ModelViewSet):
     permissions_classes = [permissions.IsAuthenticated]
         
     def get_queryset(self):
-        queryset = Appel.objects.filter(user=self.request.user)
+        queryset = Appel.objects.filter(user=self.request.user.id)
 
         candidature_id = self.request.query_params.get("candidature_id")
         entreprise_id = self.request.query_params.get("entreprise_id")
         relance_id = self.request.query_params.get("relance_id")
 
         if candidature_id:
-            queryset = queryset.filter(candidature__candidature_id=candidature_id)
+            queryset = queryset.filter(candidature_id=candidature_id)
         if entreprise_id:
-            queryset = queryset.filter(company__id=entreprise_id)
+            queryset = queryset.filter(entreprise_id=entreprise_id)
         if relance_id:
-            queryset = queryset.filter(relance__id=relance_id)
+            queryset = queryset.filter(relance_id=relance_id)
 
         return queryset
 
@@ -57,7 +57,7 @@ class AppelViewSet(viewsets.ModelViewSet):
         except:
             return Response({"error": "Invalid timestamps"}, status=400)
 
-        appels = Appel.objects.filter(user=user, date_time__range=(from_dt, to_dt))
+        appels = Appel.objects.filter(user_id=user.id, date__range=(from_dt, to_dt))
         return Response(self.get_serializer(appels, many=True).data)
 
 class AppelList(APIView):

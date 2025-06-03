@@ -1,36 +1,51 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Entreprise
 from .serializers import EntrepriseSerializer
+from linking_models import UserEntreprise
+from django.utils import timezone
+
 
 class EntrepriseViewSet(viewsets.ModelViewSet):
     serializer_class = EntrepriseSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Entreprise.objects.filter(user=self.request.user)
+        return Entreprise.objects.filter(user_id=self.request.user.id, is_deleted=False)
 
     def perform_create(self, serializer):
         data = self.request.data
-        company_name = data.get("companyName")
-        
-        entreprise, created = Entreprise.objects.get_or_create(
-            name = company_name,
-            defaults={
-                "user": self.request.user,
-                "type": data.get("companyType", ""),
-                "phone": data.get("companyPhone", ""),
-                "email": data.get("companyEmail", ""),
-                "hr_email": data.get("companyHrEmail", ""),
-                "address": data.get("companyAddress", ""),
-                "notes": data.get("companyNotes", ""),
-            }
+        name = data.get("name", "").strip()
+
+        if not name:
+            raise ValueError("Le nom de l'entreprise est requis")
+
+        entreprise = Entreprise.objects.filter(name=name).first()
+
+        if entreprise:
+            # Mise à jour partielle si elle existe déjà
+            entreprise.type = data.get("type", entreprise.type)
+            entreprise.phone = data.get("phone", entreprise.phone)
+            entreprise.email = data.get("email", entreprise.email)
+            entreprise.hr_email = data.get("hr_email", entreprise.hr_email)
+            entreprise.address = data.get("address", entreprise.address)
+            entreprise.notes = data.get("notes", entreprise.notes)
+            entreprise.updated_at = timezone.now()
+            entreprise.save()
+        else:
+            # Création
+            entreprise = serializer.save(user_id=self.request.user.id)
+
+        # Création de la relation UserEntreprise si absente
+        UserEntreprise.objects.get_or_create(
+            user_id=self.request.user.id,
+            entreprise_id=entreprise.id
         )
-        
-        entreprise = serializer.save(user=self.request.user, entreprise=entreprise)
-                
-        serializer.save(user=self.request.user)
+
+        # Si la création s’est faite via le serializer, ne pas re-sauvegarder
+        if not isinstance(entreprise, Entreprise):
+            serializer.save(user_id=self.request.user.id)
 
     @action(detail=False, methods=["get"], url_path="archived")
     def archived(self, request):

@@ -12,36 +12,35 @@ class CandidatureViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Candidature.objects.filter(user=self.request.user)
+def perform_create(self, serializer):
+    data = self.request.data
+    company_name = data.get("companyName")
+    
+    entreprise, _ = Entreprise.objects.get_or_create(
+        name = company_name,
+        defaults={
+            "user_id": self.request.user.id,
+            "type": data.get("companyType", ""),
+            "phone": data.get("companyPhone", ""),
+            "email": data.get("companyEmail", ""),
+            "hr_email": data.get("companyHrEmail", ""),
+            "address": data.get("companyAddress", ""),
+            "notes": data.get("companyNotes", ""),
+        }
+    )
+    
+    serializer.save(
+        user_id=self.request.user.id,
+        entreprise_id=entreprise.id
+    )
 
-    def perform_create(self, serializer):
-        data = self.request.data
-        company_name = data.get("companyName")
-        
-        entreprise, created = Entreprise.objects.get_or_create(
-            name = company_name,
-            defaults={
-                "user": self.request.user,
-                "type": data.get("companyType", ""),
-                "phone": data.get("companyPhone", ""),
-                "email": data.get("companyEmail", ""),
-                "hr_email": data.get("companyHrEmail", ""),
-                "address": data.get("companyAddress", ""),
-                "notes": data.get("companyNotes", ""),
-            }
-        )
-        
-        candidature = serializer.save(user=self.request.user, entreprise=entreprise)
-        
-        Event.objects.create(
-            user=self.request.user,
-            title=data.get("title", "Candidature"),
-            description=f"Candidature '{candidature.title}' pour {entreprise.name}",
-            type="application",
-            related_object_id=candidature.id
-        )
-        
-        
-        serializer.save(user=self.request.user)
+    Event.objects.create(
+        user_id=self.request.user.id,
+        title=data.get("title", "Candidature"),
+        description=f"Candidature '{serializer.validated_data.get('title')}' pour {entreprise.name}",
+        type="application",
+        related_object_id=serializer.instance.id
+    )
 
     @action(detail=False, methods=["get"], url_path="archived")
     def archived(self, request):

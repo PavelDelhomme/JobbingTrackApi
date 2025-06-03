@@ -9,13 +9,30 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
+
+from django.db import transaction
+
+from .models import Profile
 
 from .serializers import RegisterSerializer, UserSerializer
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+    @transaction.atomic
+    def perform_create(self, serializer):
+        user = serializer.save()
+        Profile.objects.create(
+            user_id=user.id,
+            subject="Profil par défaut",
+            notes="Créé automatiquement à l’inscription",
+            company_ids=[],
+            contact_ids=[],
+            candidature_ids=[],
+            relance_ids=[],
+        )
 
 
 class LoginView(APIView):
@@ -54,6 +71,15 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({"error": "Token invalide ou déjà révoqué."}, status=400)
 
+
+class LogoutAllView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        tokens = OutstandingToken.objects.filter(user=request.user)
+        for token in tokens:
+            _, _ = BlacklistedToken.objects.get_or_create(token=token)
+        return Response({"detail": "Tous les tokens ont été révoqués."}, status=205)
 
 class MeView(APIView):
     permission_classes = [permissions.IsAuthenticated]

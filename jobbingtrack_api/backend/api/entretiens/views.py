@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from .models import Entretien
 from .serializers import EntretienSerializer
 from api.entreprises.models import Entreprise
+from api.evenements.models import Event
+from common.models.linking_models import UserEntretien
 
 class EntretienViewSet(viewsets.ModelViewSet):
     serializer_class = EntretienSerializer
@@ -14,21 +16,18 @@ class EntretienViewSet(viewsets.ModelViewSet):
 
 
     def perform_create(self, serializer):
-        data = self.request.data
-        company_name = data.get("companyName")
-                
-        candidature = serializer.save(user=self.request.user, entreprise=entreprise)
+        entretien = serializer.save(user_id=self.request.user.id)
         
+        UserEntretien.objects.get_or_create(user_id=self.request.user.id, entretien_id=entretien.id)
+        
+        # Créer événement
         Event.objects.create(
-            user=self.request.user,
-            title=data.get("title", "Candidature"),
-            description=f"Candidature '{candidature.title}' pour {entreprise.name}",
-            type="application",
-            related_object_id=candidature.id
+            user_id=self.request.user.id,
+            title="Entretien programmé",
+            description=f"Entretien prévu le {entretien.date_time}",
+            type="interview",
+            related_object_id=entretien.id,
         )
-        
-        
-        serializer.save(user=self.request.user)
 
 
     @action(detail=False, methods=["get"], url_path="archived")

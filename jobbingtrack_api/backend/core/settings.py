@@ -156,8 +156,10 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'AUTH_HEADER_TYPES': ('Bearer',),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
     "BLACKLIST_AFTER_ROTATION": True,
-    "ROTATE_REFRESH_TOKENS": True
+    "ROTATE_REFRESH_TOKENS": True,
+    "UPDATE_LAST_LOGIN": True,
 }
 
 AUTH_USER_MODEL = 'authentication.User'

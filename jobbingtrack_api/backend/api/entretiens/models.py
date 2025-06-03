@@ -1,10 +1,11 @@
 from django.db import models
 from common.models.base import BaseModel
 
+    
 class Entretien(BaseModel):
-    user_id = models.UUIDField(db_index=True, null=True, blank=True)
-    candidature_id = models.UUIDField(null=True, blank=True)
-    entreprise_id = models.UUIDField(null=True, blank=True)
+    user_id = models.UUIDField(db_index=True)
+    candidature_id = models.UUIDField(db_index=True)
+    entreprise_id = models.UUIDField(db_index=True)
 
     date_time = models.DateTimeField()
     duration_minutes = models.IntegerField(null=True, blank=True)
@@ -19,3 +20,6 @@ class Entretien(BaseModel):
     return_date = models.DateTimeField(null=True, blank=True)
     tests_needed = models.BooleanField(default=False)
     tests_deadline = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Entretien {self.id} - {self.date_time}"
