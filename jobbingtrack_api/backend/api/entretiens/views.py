@@ -5,7 +5,7 @@ from .models import Entretien
 from .serializers import EntretienSerializer
 from api.entreprises.models import Entreprise
 from api.evenements.models import Event
-from common.models.linking_models import UserEntretien
+from common.models import UserEntretien
 
 class EntretienViewSet(viewsets.ModelViewSet):
     serializer_class = EntretienSerializer

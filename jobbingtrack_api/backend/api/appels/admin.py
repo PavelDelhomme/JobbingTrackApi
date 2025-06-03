@@ -4,9 +4,9 @@ from common.models import UserAppel, EntrepriseAppel, ContactAppel, CandidatureA
 
 @admin.register(Appel)
 class AppelAdmin(admin.ModelAdmin):
-    list_display = ("id", "get_user", "subject", "get_candidature", "get_company", "get_contact", "get_relance", "date_time")
+    list_display = ("id", "get_user", "subject", "get_candidature", "get_company", "get_contact", "get_relance", "date")
     search_fields = ("subject",)
-    list_filter = ("date_time",)
+    list_filter = ("date",)
 
     def get_user(self, obj):
         relation = UserAppel.objects.filter(appel_id=obj.id).first()

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Relance
-from common.models.linking_models import ContactRelance, CandidatureRelance, EntrepriseRelance
+from common.models import ContactRelance, CandidatureRelance, EntrepriseRelance
 
 @admin.register(Relance)
 class RelanceAdmin(admin.ModelAdmin):

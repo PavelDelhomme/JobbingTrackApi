@@ -6,7 +6,7 @@ from django.utils import timezone
 from .models import Contact
 from .serializers import ContactSerializer
 from api.entreprises.models import Entreprise
-from common.models.linking_models import UserContact, ContactEntreprise
+from common.models import UserContact, ContactEntreprise
 
 
 class ContactViewSet(viewsets.ModelViewSet):

@@ -1,11 +1,11 @@
 from django.db import models
 from common.models.base import BaseModel
+from django.utils import timezone
+import datetime
 
-class Appel(BaseModel):
-    user_id = models.UUIDField(db_index=True)
-    
+class Appel(BaseModel):   
     # Champs métier
-    date = models.DateTimeField()
+    date = models.DateTimeField(default=timezone.now, null=True, blank=True)
     duree_minutes = models.IntegerField(null=True, blank=True)
     resume = models.TextField(null=True, blank=True)
     type = models.CharField(max_length=100, null=True, blank=True)    
@@ -13,8 +13,8 @@ class Appel(BaseModel):
     notes = models.TextField(null=True, blank=True)
     
     # Liens obligatoires
-    entreprise_id = models.UUIDField(db_index=True)
-    candidature_id = models.UUIDField(db_index=True)
+    entreprise_id = models.UUIDField(db_index=True, null=True, blank=True)
+    candidature_id = models.UUIDField(db_index=True, null=True, blank=True)
 
     # Liens facultatifs
     contact_id = models.UUIDField(null=True, blank=True)

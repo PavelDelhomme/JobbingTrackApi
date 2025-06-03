@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Entreprise
 from .serializers import EntrepriseSerializer
-from linking_models import UserEntreprise
+from common.models import UserEntreprise
 from django.utils import timezone
 
 
@@ -42,10 +42,6 @@ class EntrepriseViewSet(viewsets.ModelViewSet):
             user_id=self.request.user.id,
             entreprise_id=entreprise.id
         )
-
-        # Si la création s’est faite via le serializer, ne pas re-sauvegarder
-        if not isinstance(entreprise, Entreprise):
-            serializer.save(user_id=self.request.user.id)
 
     @action(detail=False, methods=["get"], url_path="archived")
     def archived(self, request):

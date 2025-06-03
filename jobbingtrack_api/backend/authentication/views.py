@@ -13,7 +13,7 @@ from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, Ou
 
 from django.db import transaction
 
-from .models import Profile
+from api.profiles.models import Profile
 
 from .serializers import RegisterSerializer, UserSerializer
 

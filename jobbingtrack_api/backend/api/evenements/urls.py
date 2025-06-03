@@ -3,6 +3,6 @@ from rest_framework.routers import DefaultRouter
 from .views import EvenementViewSet
 
 router = DefaultRouter()
-router.register(r'', EvenementViewSet, basename='evenement')
+router.register(r'evenements', EvenementViewSet, basename='evenement')
 
 urlpatterns = router.urls

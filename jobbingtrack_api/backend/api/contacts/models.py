@@ -2,8 +2,6 @@ from django.db import models
 from common.models.base import BaseModel
 
 class Contact(BaseModel):
-    user_id = models.UUIDField(db_index=True)
-
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(max_length=50, null=True, blank=True)

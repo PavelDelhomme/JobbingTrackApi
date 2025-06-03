@@ -8,6 +8,22 @@ from django.utils.timezone import now
 from .models import Profile, CV, Language, Experience, Education, Project
 from .serializers import ProfileSerializer, CVSerializer, LanguageSerializer, ExperienceSerializer, EducationSerializer, ProjectSerializer
 
+class CVViewSet(viewsets.ModelViewSet):
+    serializer_class = CVSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = CV.objects.none()
+    
+    def get_queryset(self):
+        return CV.objects.filter(user_id=self.request.user.id)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user.id)
+
+    def perform_update(self, serializer):
+        
+        serializer.save(user_id=self.request.user.id)
+
+
 class UploadCVView(APIView):
     parser_classes = [MultiPartParser]
     permission_classes = [IsAuthenticated]
@@ -24,7 +40,8 @@ class UploadCVView(APIView):
 class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
-
+    queryset = Profile.objects.none()  # 👈 AJOUTE CECI
+    
     def get_queryset(self):
         return Profile.objects.filter(user_id=self.request.user.id)
 
@@ -78,3 +95,56 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return Response(self.get_serializer(qs, many=True).data)
 
 
+class LanguageViewSet(viewsets.ModelViewSet):
+    serializer_class = LanguageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Language.objects.filter(user_id=self.request.user.id)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user.id)
+
+    def perform_update(self, serializer):
+        serializer.save(user_id=self.request.user.id)
+        
+class ExperienceViewSet(viewsets.ModelViewSet):
+    serializer_class = ExperienceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return Experience.objects.filter(user_id=self.request.user.id)
+    
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user.id)
+
+    def perform_update(self, serializer):
+        serializer.save(user_id=self.request.user.id)
+    
+
+class EducationViewSet(viewsets.ModelViewSet):
+    serializer_class = EducationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Education.objects.filter(user_id=self.request.user.id)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user.id)
+
+    def perform_update(self, serializer):
+        serializer.save(user_id=self.request.user.id)
+
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    serializer_class = ProjectSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Project.objects.filter(user_id=self.request.user.id)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user.id)
+
+    def perform_update(self, serializer):
+        serializer.save(user_id=self.request.user.id)

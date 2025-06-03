@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 
 class AppelViewSet(viewsets.ModelViewSet):
     serializer_class = AppelSerializer
-    permissions_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
         
     def get_queryset(self):
         queryset = Appel.objects.filter(user=self.request.user.id)

@@ -2,7 +2,6 @@ from django.db import models
 from common.models.base import BaseModel
 
 class Entreprise(BaseModel):
-    user_id = models.UUIDField(db_index=True)
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=100, null=True, blank=True)
     phone = models.CharField(max_length=50, null=True, blank=True)

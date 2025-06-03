@@ -3,7 +3,6 @@ from common.models.base import BaseModel
 
     
 class Entretien(BaseModel):
-    user_id = models.UUIDField(db_index=True)
     candidature_id = models.UUIDField(db_index=True)
     entreprise_id = models.UUIDField(db_index=True)
 
