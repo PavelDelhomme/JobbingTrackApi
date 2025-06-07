@@ -8,7 +8,7 @@ class Appel(BaseModel):
     date = models.DateTimeField(default=timezone.now, null=True, blank=True)
     duree_minutes = models.IntegerField(null=True, blank=True)
     resume = models.TextField(null=True, blank=True)
-    type = models.CharField(max_length=100, null=True, blank=True)    
+    appel_type = models.ForeignKey("AppelType", on_delete=models.SET_NULL, null=True, blank=True)
     subject = models.CharField(max_length=255)
     notes = models.TextField(null=True, blank=True)
     
@@ -35,3 +35,9 @@ class Appel(BaseModel):
     
     def __str__(self):
         return f"Appel le {self.date.strftime('%d/%m/%Y %H:%M')}"
+
+class AppelType(BaseModel):
+    type = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.type

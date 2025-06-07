@@ -35,3 +35,17 @@ class Candidature(BaseModel):
 
     def __str__(self):
         return f"Candidature {self.title} ({self.id})"
+
+    
+class CandidatureType(BaseModel):
+    name = models.CharField(max_length=100, unique=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class CandidatureStatus(BaseModel):
+    name = models.CharField(max_length=100, unique=True)
+    
+    def __str__(self):
+        return self.name

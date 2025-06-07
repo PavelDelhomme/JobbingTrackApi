@@ -22,6 +22,7 @@ class Experience(BaseModel):
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='experiences')
     title = models.CharField(max_length=255)
     company = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
@@ -30,6 +31,7 @@ class Education(BaseModel):
     profile = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name='educations')
     diploma = models.CharField(max_length=255)
     school = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
 

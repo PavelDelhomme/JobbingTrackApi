@@ -4,6 +4,7 @@ User = get_user_model()
 from rest_framework import generics, permissions
 
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.views import APIView
 
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -18,14 +19,15 @@ from api.profiles.models import Profile
 from .serializers import RegisterSerializer, UserSerializer
 
 class RegisterView(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny]
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
     @transaction.atomic
     def perform_create(self, serializer):
-        user = serializer.save()
+        self.user = serializer.save()
         Profile.objects.create(
-            user_id=user.id,
+            user_id=self.user.id,
             subject="Profil par défaut",
             notes="Créé automatiquement à l’inscription",
             company_ids=[],
@@ -33,6 +35,18 @@ class RegisterView(generics.CreateAPIView):
             candidature_ids=[],
             relance_ids=[],
         )
+    
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        refresh = RefreshToken.for_user(self.user)
+        return Response({
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "user": {
+                "id": str(self.user.id),
+                "email": self.user.email,
+            }
+        }, status=status.HTTP_201_CREATED)
 
 
 class LoginView(APIView):
