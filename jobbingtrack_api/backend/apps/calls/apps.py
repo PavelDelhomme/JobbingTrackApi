@@ -1,6 +1,7 @@
+#backend/api/calls/apps.py
 from django.apps import AppConfig
 
 
-class AuthConfig(AppConfig):
+class CallsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.authentication'
+    name = 'apps.calls'
