@@ -1,3 +1,4 @@
+#backend/api/appels/admin.py
 from django.contrib import admin
 from .models import Appel
 from common.models import UserAppel, EntrepriseAppel, ContactAppel, CandidatureAppel, RelanceAppel

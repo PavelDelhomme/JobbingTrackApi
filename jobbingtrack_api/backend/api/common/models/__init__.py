@@ -1,5 +1,5 @@
 from .base import BaseModel
-from .linking_models import (
+from .linking import (
     # CANDIDATURES RELATIONS
     CandidatureContact,
     CandidatureRelance,

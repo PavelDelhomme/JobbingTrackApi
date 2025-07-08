@@ -1,3 +1,4 @@
+#backend/api/entretiens/admin.py
 from django.contrib import admin
 from .models import Entretien
 from common.models import UserEntretien, CandidatureEntretien, EntrepriseEntretien, ContactEntretien

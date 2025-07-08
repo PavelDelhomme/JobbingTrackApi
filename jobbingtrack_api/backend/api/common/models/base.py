@@ -14,3 +14,14 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+        
+class TimeStampedModel(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    class Meta:
+        abstract = True
+
+class UserOwnedModel(models.Model):
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+    class Meta:
+        abstract = True
