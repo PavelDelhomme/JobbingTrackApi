@@ -1,3 +1,6 @@
+from apps.common.models.base import BaseModel
+from django.db import models
+
 class Event(BaseModel):
     """Événement lié à Application, Call, FollowUp ou Interview."""
     event_type_ref_id = models.CharField(max_length=36)

@@ -12,6 +12,9 @@ class UserProfile(BaseModel):
     cv_ids          = models.JSONField(default=list, blank=True)
     followup_ids    = models.JSONField(default=list, blank=True)
     interview_ids   = models.JSONField(default=list, blank=True)
+    note_ids        = models.JSONField(default=list, blank=True)
+    project_ids     = models.JSONField(default=list, blank=True)
+    
 
     # Ex : infos complément-aires (bio, avatar...)
     bio   = models.TextField(blank=True)

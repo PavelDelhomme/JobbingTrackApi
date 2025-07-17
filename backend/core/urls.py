@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,6 +22,11 @@ urlpatterns = [
     path('api/profiles/',      include('apps.profiles.urls')),
     path('api/references/',    include('apps.references.urls')),
     path('api/events/',        include('apps.events.urls')),
+]
+
+urlpatterns += [
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_viw(url_name='schema'), name='swagger-ui'),
 ]
 
 if settings.DEBUG:

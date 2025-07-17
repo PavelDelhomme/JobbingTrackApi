@@ -1,3 +1,6 @@
+from apps.common.models.base import BaseModel
+from django.db import models
+
 class FollowUp(BaseModel):
     followup_ts     = models.BigIntegerField()
     application_id  = models.CharField(max_length=36)

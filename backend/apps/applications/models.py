@@ -1,3 +1,6 @@
+from django.db import models
+from apps.common.models.base import BaseModel
+
 class Application(BaseModel):
     title            = models.CharField(max_length=255)
     company_id       = models.CharField(max_length=36)
@@ -24,3 +27,6 @@ class Application(BaseModel):
         db_table = 'applications'
         verbose_name = 'Application'
         verbose_name_plural = 'Applications'
+    
+    def __str__(self):
+        return f"{self.title} ({self.company_name})"
