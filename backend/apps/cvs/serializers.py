@@ -1,22 +1,22 @@
-from rest_framework import serializers
+from apps.common.serializers import BaseModelSerializer
 from .models import *
 
-class SkillSerializer(serializers.ModelSerializer):
+class SkillSerializer(BaseModelSerializer):
     class Meta:
         model = Skill
         fields = '__all__'
 
-class EducationSerializer(serializers.ModelSerializer):
+class EducationSerializer(BaseModelSerializer):
     class Meta:
         model = Education
         fields = '__all__'
 
-class ExperienceSerializer(serializers.ModelSerializer):
+class ExperienceSerializer(BaseModelSerializer):
     class Meta:
         model = Experience
         fields = '__all__'
 
-class CvSerializer(serializers.ModelSerializer):
+class CvSerializer(BaseModelSerializer):
     skills = SkillSerializer(many=True, read_only=True)
     educations = EducationSerializer(many=True, read_only=True)
     experiences = ExperienceSerializer(many=True, read_only=True)

@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
-from .views import CVViewSet
+from .views import FollowUpViewSet
 
 router = DefaultRouter()
-router.register(r'', CVViewSet, basename='cvs')
+router.register(r'', FollowUpViewSet, basename='followups')
 
 urlpatterns = router.urls

@@ -5,10 +5,26 @@ class Cv(BaseModel):
     """CV principal d'un utilisateur"""
     title = models.CharField(max_length=255)
     summary = models.TextField(blank=True)
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='cvs')
+    file_path = models.CharField(max_length=500, blank=True) # Chemin vers le fichier PDF
+    is_primary = models.BooleanField(default=False) # CV principal
+
+    # Relation avec les éléments du CV
+    education_ids = models.JSONField(default=list, blank=True)
+    experience_ids = models.JSONField(default=list, blank=True)
+    skill_ids = models.JSONField(default=list, blank=True)
+    language_ids = models.JSONField(default=list, blank=True)
+    project_ids = models.JSONField(default=list, blank=True)
+    certification_ids = models.JSONFiel(default=list, blank=True)
+
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        db_table = 'cvs'
+        verbose_name = 'CV'
+        verbose_name_plural = 'CVs'
 
     def __str__(self):
-        return f"CV {self.title} ({self.user})"
+        return f"{self.title} ({'Principal' if self.is_primary else 'Secondaire'})"
 
 class Education(BaseModel):
     """Formation académique"""
