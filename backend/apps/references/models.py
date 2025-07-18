@@ -26,7 +26,10 @@ class ReferenceType(models.TextChoices):
     
     # Companies
     COMPANY_TYPE = 'COMPANY_TYPE', 'Type d\'entreprise'
-    
+    COMPANY_SIZE = 'COMPANY_SIZE', 'Taille d’entreprise'
+    COMPANY_LEGAL = 'COMPANY_LEGAL', 'Forme juridique'
+    CONTACT_SENIORITY = 'CONTACT_SENIORITY', 'Niveau hiérarchique'
+
     # Contacts
     DEPARTMENT_TYPE = 'DEPARTMENT_TYPE', 'Type de département'
     POSITION_TYPE = 'POSITION_TYPE', 'Type de poste'

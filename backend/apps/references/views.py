@@ -3,10 +3,13 @@ from rest_framework.response import Response
 from apps.common.viewsets import BaseViewSet
 from .models import Reference, ReferenceType
 from .serializers import ReferenceSerializer
+from rest_framework.filters import SearchFilter
 
 class ReferenceViewSet(BaseViewSet):
     queryset = Reference.objects.all()
     serializer_class = ReferenceSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['label']
     
     @action(detail=False, methods=['get'])
     def by_type(self, request):

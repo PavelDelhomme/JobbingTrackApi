@@ -6,60 +6,58 @@ from .permissions import IsOwnerOrReadOnly
 
 class BaseViewSet(viewsets.ModelViewSet):
     """
-    ViewSet de base pour tous les modèles métier.
-    Filtre automatiquement par utilisateur et gère le soft delete.
+    ViewSet générique :
+    • filtre par user
+    • soft-delete / archive
+    • synchronisation via ?updated_after=
     """
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     
+
+    # --- Queryset -------------------------------------------------
     def get_queryset(self):
-        """Filtre par utilisateur et exclut les éléments supprimés"""
-        return self.queryset.filter(
-            user=self.request.user,
-            is_deleted=False
-        )
-    
+        qs = self.queryset.filter(user=self.request.user, is_deleted=False)
+        since = self.request.query_params.get("updated_after")
+        if since:
+            qs = qs.filter(updated_at__gt=since)
+        return qs.order_by("-updated_at")
+
+    # --- Création -------------------------------------------------
     def perform_create(self, serializer):
-        """Associe l'utilisateur lors de la création"""
         serializer.save(user=self.request.user)
-    
-    @action(detail=True, methods=['post'])
+
+    # --- Actions custom ------------------------------------------
+    @action(detail=True, methods=["post"])
     def soft_delete(self, request, pk=None):
-        """Suppression logique"""
         obj = self.get_object()
         obj.soft_delete()
-        return Response({'status': 'deleted'})
-    
-    @action(detail=True, methods=['post'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=["post"])
     def archive(self, request, pk=None):
-        """Archivage"""
         obj = self.get_object()
         obj.archive()
-        return Response({'status': 'archived'})
-    
-    @action(detail=True, methods=['post'])
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=["post"])
     def restore(self, request, pk=None):
-        """Restauration"""
         obj = self.get_object()
         obj.restore()
-        return Response({'status': 'restored'})
-    
-    @action(detail=False, methods=['get'])
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"])
     def archived(self, request):
-        """Liste des éléments archivés"""
-        queryset = self.queryset.filter(
-            user=request.user,
-            is_archived=True,
-            is_deleted=False
-        )
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-    
-    @action(detail=False, methods=['get'])
+        data = self.get_serializer(
+            self.queryset.filter(
+                user=request.user, is_archived=True, is_deleted=False
+            ),
+            many=True,
+        ).data
+        return Response(data)
+
+    @action(detail=False, methods=["get"])
     def deleted(self, request):
-        """Liste des éléments supprimés"""
-        queryset = self.queryset.filter(
-            user=request.user,
-            is_deleted=True
-        )
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        data = self.get_serializer(
+            self.queryset.filter(user=request.user, is_deleted=True), many=True
+        ).data
+        return Response(data)

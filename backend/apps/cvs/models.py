@@ -54,3 +54,27 @@ class Skill(BaseModel):
         ('ADVANCED', 'Avancé'),
         ('EXPERT', 'Expert')
     ))
+
+class Language(BaseModel):
+    cv = models.ForeignKey(Cv, on_delete=models.CASCADE, related_name='languages')
+    name = models.CharField(max_length=100)
+    level = models.CharField(max_length=50, choices=(
+        ('A1', 'A1'), ('A2', 'A2'), ('B1', 'B1'), ('B2', 'B2'), ('C1', 'C1'), ('C2', 'C2'), ('NATIVE', 'Natif')
+    ))
+    certified = models.BooleanField(default=False)
+    certificate_name = models.CharField(max_length=255, blank=True)
+    
+class Project(BaseModel):
+    """ Projet professionnel/personnel réalisé"""
+    cv = models.ForeignKey(Cv, on_delete=models.CASCADE, related_name='projects')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    link = models.URLField(blank=True)
+
+class Certification(BaseModel):
+    """Certification professionnelle/personnelle"""
+    cv = models.ForeignKey(Cv, on_delete=models.CASCADE, related_name='certifications')
+    name = models.CharField(max_length=255)
+    authority = models.CharField(max_length=255, blank=True)
+    date_obtained = models.DateField(null=True, blank=True)
+    link = models.URLField(blank=True)

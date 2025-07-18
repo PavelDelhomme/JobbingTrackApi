@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import RegistrationSerializer, UserSerializer
 from .models import User
+from logic.authentication_service import AuthenticationService
 
 
 class RegisterView(generics.CreateAPIView):

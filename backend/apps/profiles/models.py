@@ -31,6 +31,9 @@ class UserProfile(BaseModel):
     email_notifications = models.BooleanField(default=True)
     sms_notifications = models.BooleanField(default=False)
     
+    # Paramètres généraux
+    timezone = models.CharField(max_length=50, default='Europe/Paris')
+    
     notes = models.TextField(blank=True)
 
     class Meta:
