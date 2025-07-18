@@ -1,10 +1,17 @@
+# apps/contacts/views.py
 from apps.common.viewsets import BaseViewSet
 from .models import Contact
 from .serializers import ContactSerializer
-from backend.apps.common.utils.factory import viewset_factory
+from logic.contact_service import ContactService
 
-#class ContactViewSet(BaseViewSet):
-#    queryset = Contact.objects.all()
-#    serializer_class = ContactSerializer
+class ContactViewSet(BaseViewSet):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
 
-ContactViewSet = viewset_factory(Contact, ContactSerializer)
+    def perform_create(self, serializer):
+        contact = serializer.save(user=self.request.user)
+        ContactService.attach_company(contact)
+
+    def perform_update(self, serializer):
+        contact = serializer.save()
+        ContactService.attach_company(contact)

@@ -1,7 +1,6 @@
 from apps.common.viewsets import BaseViewSet
 from .models import FollowUp
 from .serializers import FollowUpSerializer
-from backend.apps.common.utils.factory import viewset_factory
 
 from logic.followup_service import FollowUpService
 

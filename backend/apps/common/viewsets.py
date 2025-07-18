@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwnerOrReadOnly
+from apps.common.filters import UpdatedAfterFilter
 
 class BaseViewSet(viewsets.ModelViewSet):
     """
@@ -12,7 +13,7 @@ class BaseViewSet(viewsets.ModelViewSet):
     • synchronisation via ?updated_after=
     """
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-    
+    filter_backends = [UpdatedAfterFilter]    
 
     # --- Queryset -------------------------------------------------
     def get_queryset(self):

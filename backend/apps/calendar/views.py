@@ -1,8 +1,5 @@
-from apps.common.viewsets import BaseViewSet
+from apps.common.utils.factory import crud_viewset
 from .models import Calendar
 from .serializers import CalendarSerializer
-from logic.calendar_service import CalendarService
 
-class CalendarViewSet(BaseViewSet):
-    queryset = Calendar.objects.all()
-    serializer_class = CalendarSerializer
+CalendarViewSet = crud_viewset(Calendar, CalendarSerializer)

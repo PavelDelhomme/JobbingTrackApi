@@ -8,10 +8,10 @@ class InterviewViewSet(BaseViewSet):
     serializer_class = InterviewSerializer
 
     def perform_create(self, serializer):
-        interview = serializer.save(user=self.request.user)
-        InterviewService.on_create(interview)          # logique métier
+        itw = serializer.save(user=self.request.user)
+        InterviewService.on_create(itw)          # logique métier
 
     def perform_update(self, serializer):
         old = self.get_object()
-        interview = serializer.save()
-        InterviewService.on_update(interview, old)     # logique métier
+        itw = serializer.save()
+        InterviewService.on_update(itw, old)     # logique métier

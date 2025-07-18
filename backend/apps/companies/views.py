@@ -7,6 +7,7 @@ class _CompanyViewSet(crud_viewset(Company, CompanySerializer)):
     def perform_create(self, serializer):
         company = serializer.save(user=self.request.user)
         CompanyService.suggest_type(company)
+        CompanyService.on_create(company)
 
     def perform_update(self, serializer):
         company = serializer.save()
