@@ -26,7 +26,7 @@ class UserProfile(BaseModel):
     interview_ids = models.JSONField(default=list, blank=True)
     note_ids = models.JSONField(default=list, blank=True)
     project_ids = models.JSONField(default=list, blank=True)
-    
+
     # Paramètres de notification
     email_notifications = models.BooleanField(default=True)
     sms_notifications = models.BooleanField(default=False)
@@ -41,6 +41,7 @@ class UserProfile(BaseModel):
     calls_last_7 = models.PositiveIntegerField(default=0, editable=False)
     fu_last_7    = models.PositiveIntegerField(default=0, editable=False)
     itw_last_7   = models.PositiveIntegerField(default=0, editable=False)
+    contacts_last_7 = models.PositiveIntegerField(default=0, editable=False)
 
     class Meta:
         db_table = 'user_profiles'

@@ -1,16 +1,16 @@
 from django.utils import timezone
 from django.db.models import Count
 from apps.applications.models import Application
+from apps.contacts.models import Contact
 from apps.calls.models import Call
 from apps.followups.models import FollowUp
 from apps.interviews.models import Interview
 from apps.profiles.models import UserProfile, UserSettings
 
-
 class ProfileService:
     @staticmethod
-    def refresh_stats(profile: UserProfile):
-        since = timezone.now() - timezone.timedelta(days=7)
+    def refresh_stats(profile: UserProfile, days=7):
+        since = timezone.now() - timezone.timedelta(days=days)
         profile.apps_last_7 = Application.objects.filter(
             user=profile.user, created_at__gte=since).count()
         profile.calls_last_7 = Call.objects.filter(
@@ -19,8 +19,13 @@ class ProfileService:
             user=profile.user, created_at__gte=since).count()
         profile.itw_last_7 = Interview.objects.filter(
             user=profile.user, created_at__gte=since).count()
+        
+        # Ajout des contacts
+        profile.contacts_last_7 = Contact.objects.filter(
+            user=profile.user, created_at__gte=since).count()
+        
         profile.save(update_fields=[
-            'apps_last_7', 'calls_last_7', 'fu_last_7', 'itw_last_7'
+            'apps_last_7', 'calls_last_7', 'fu_last_7', 'itw_last_7', 'contacts_last_7'
         ])
 
     @staticmethod
@@ -33,5 +38,6 @@ class ProfileService:
                 "calls": profile.calls_last_7,
                 "followups": profile.fu_last_7,
                 "interviews": profile.itw_last_7,
+                "contacts": getattr(profile, 'contacts_last_7', 0),
             }
         }

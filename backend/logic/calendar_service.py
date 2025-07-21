@@ -1,6 +1,7 @@
 # backend/logic/calendar_service.py
 from apps.events.models import Event
 from apps.calendar.models import Calendar
+from django.db import transaction
 
 class CalendarService:
     @staticmethod
@@ -19,3 +20,14 @@ class CalendarService:
             start_ts__lte=end_ts,
             is_deleted=False
         )
+        
+    @staticmethod
+    @transaction.atomic
+    def set_as_default(calendar: Calendar):
+        # Désactive l’ancien calendrier par défaut de l’utilisateur
+        Calendar.objects.filter(
+            user=calendar.user, is_default=True
+        ).exclude(pk=calendar.pk).update(is_default=False)
+
+        calendar.is_default = True
+        calendar.save(update_fields=['is_default'])

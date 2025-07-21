@@ -14,7 +14,7 @@ class Cv(BaseModel):
     skill_ids = models.JSONField(default=list, blank=True)
     language_ids = models.JSONField(default=list, blank=True)
     project_ids = models.JSONField(default=list, blank=True)
-    certification_ids = models.JSONFiel(default=list, blank=True)
+    certification_ids = models.JSONField(default=list, blank=True)
 
     notes = models.TextField(blank=True)
 

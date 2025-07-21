@@ -10,7 +10,7 @@ ContactViewSet = crud_viewset(
     on_create=ContactService.attach_company,
     on_update=ContactService.attach_company,
     extra_backends=[SearchFilter],
-    search_fields=['first_name', 'last_name', 'email', 'company_name']
+    search_fields=['first_name', 'last_name', 'email', 'company_name', 'phone']
 )
 
 """

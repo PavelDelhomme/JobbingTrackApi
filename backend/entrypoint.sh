@@ -11,6 +11,10 @@ python manage.py wait_for_db
 echo "🗄  Application des migrations..."
 python manage.py migrate --noinput
 
+# Charger les références initiales
+echo "📦 Chargement des données de référence..."
+python manage.py loaddata apps/references/fixtures/initial_reference.json
+
 # Collecte des fichiers statiques
 echo "📦 Collecte des fichiers statiques..."
 python manage.py collectstatic --noinput

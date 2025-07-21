@@ -1,0 +1,34 @@
+[
+  { "model": "references.reference", "pk": "APP_STATUS_SENT", "fields": {
+      "user": null, "label": "Candidaté – en attente", "type": "APPLICATION_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "APP_STATUS_NO_REPLY", "fields": {
+      "user": null, "label": "Aucune réponse", "type": "APPLICATION_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "APP_STATUS_ITW_1", "fields": {
+      "user": null, "label": "Premier entretien en attente", "type": "APPLICATION_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "APP_STATUS_ITW_N", "fields": {
+      "user": null, "label": "Entretien suivant en attente", "type": "APPLICATION_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "APP_STATUS_ACCEPTED", "fields": {
+      "user": null, "label": "Retenu après entretien", "type": "APPLICATION_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "APP_STATUS_REJECTED_NO_ITW", "fields": {
+      "user": null, "label": "Refus sans entretien", "type": "APPLICATION_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "APP_STATUS_REJECTED_AFTER_ITW", "fields": {
+      "user": null, "label": "Refus après entretien", "type": "APPLICATION_STATUS", "is_default": true } },
+
+  { "model": "references.reference", "pk": "FU_STATUS_PENDING", "fields": {
+      "user": null, "label": "Relance en attente", "type": "FOLLOWUP_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "FU_STATUS_POSITIVE", "fields": {
+      "user": null, "label": "Retour positif", "type": "FOLLOWUP_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "FU_STATUS_NEGATIVE", "fields": {
+      "user": null, "label": "Retour négatif", "type": "FOLLOWUP_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "FU_STATUS_NO_REPLY", "fields": {
+      "user": null, "label": "Aucune réponse", "type": "FOLLOWUP_STATUS", "is_default": true } },
+
+  { "model": "references.reference", "pk": "ITW_STATUS_SCHEDULED", "fields": {
+      "user": null, "label": "Planifié", "type": "INTERVIEW_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "ITW_STATUS_DONE", "fields": {
+      "user": null, "label": "Réalisé", "type": "INTERVIEW_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "ITW_STATUS_WAITING_FEEDBACK", "fields": {
+      "user": null, "label": "En attente de retour", "type": "INTERVIEW_STATUS", "is_default": true } },
+  { "model": "references.reference", "pk": "ITW_STATUS_NO_REPLY", "fields": {
+      "user": null, "label": "Aucune réponse", "type": "INTERVIEW_STATUS", "is_default": true } }
+]

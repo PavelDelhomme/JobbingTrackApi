@@ -1,41 +1,47 @@
-from apps.common.viewsets import BaseViewSet
-from rest_framework import mixins
-from .models import (
-    Cv, Education, Experience, Skill, 
-    Language, Project, Certification
-)
-from .serializers import (
-    CvSerializer, EducationSerializer, ExperienceSerializer,
-    SkillSerializer, LanguageSerializer, ProjectSerializer, 
-    CertificationSerializer
-)
+from rest_framework import mixins, viewsets
+from rest_framework.permissions import IsAuthenticated
+from apps.common.permissions import IsOwnerOrReadOnly
+from apps.common.filters import UpdatedAfterFilter
+from .models import (Cv, Education, Experience, Skill, Language, Project, Certification)
+from .serializers import (CvSerializer, EducationSerializer, ExperienceSerializer,
+                         SkillSerializer, LanguageSerializer, ProjectSerializer, 
+                         CertificationSerializer)
 from logic.cv_service import CvService
 
-class CvViewSet(BaseViewSet):
+class CvViewSet(viewsets.ModelViewSet):
     queryset = Cv.objects.all()
     serializer_class = CvSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    filter_backends = [UpdatedAfterFilter]
 
     def perform_create(self, serializer):
         cv = serializer.save(user=self.request.user)
-        CvService.ensure_single_primary(cv)
+        CvService.on_create(cv)
 
     def perform_update(self, serializer):
         cv = serializer.save()
-        CvService.ensure_single_primary(cv)
+        CvService.on_update(cv)
 
-class _Child(BaseViewSet,
-             mixins.CreateModelMixin,
-             mixins.UpdateModelMixin,
-             mixins.DestroyModelMixin,
-             mixins.ListModelMixin,
-             mixins.RetrieveModelMixin):
+class _Child(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    filter_backends = [UpdatedAfterFilter]
     
     def get_queryset(self):
         return self.model.objects.filter(
             cv_id=self.kwargs["cv_pk"], 
             user=self.request.user,
             is_deleted=False
-        )
+        ).order_by("-updated_at")
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, cv_id=self.kwargs["cv_pk"])
 
 class EducationViewSet(_Child):
     model = Education

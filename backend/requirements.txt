@@ -4,3 +4,6 @@ djangorestframework-simplejwt
 psycopg2-binary
 python-decouple
 drf-nested-routers
+django-cors-headers
+django
+drf-spectacular

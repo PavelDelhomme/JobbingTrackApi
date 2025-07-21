@@ -57,3 +57,14 @@ class UserPermissions(models.Model):
     def __str__(self):
         return f'{self.user.email} – {self.get_role_display()}'
 
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=100, unique=True)
+    expires_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'password_reset_tokens'
+        
+    def __str__(self):
+        return self.token

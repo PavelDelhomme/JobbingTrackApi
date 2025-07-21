@@ -1,5 +1,8 @@
+from django.db import models
 from apps.events.models import Event
+from apps.companies.models import Company
 from django.utils import timezone
+
 
 class ApplicationService:
     @staticmethod
@@ -13,16 +16,20 @@ class ApplicationService:
             related_object_id=application.id,
             related_object_type='APPLICATION',
         )
-        # Event de relance automatique 7 jours après
-        tslater = application.application_ts + 7 * 24 * 3600
+        # Event de relance automatique J+7
         Event.objects.create(
             user=application.user,
-            title=f"Relance : {application.title}",
+            title=f"Relance – {application.title}",
             event_type_ref_id='EVENT_TYPE_FOLLOWUP_REMINDER',
-            start_ts=tslater,
+            start_ts=application.application_ts + 7*24*3600,
             related_object_id=application.id,
             related_object_type='APPLICATION',
             notification_enabled=True,
+        )
+        
+        # Mise à jour de la liste dans Company
+        Company.objects.filter(pk=application.company_id).update(
+            application_ids=models.F('application_ids') + [application.id]
         )
 
     @staticmethod
@@ -62,9 +69,9 @@ class ApplicationService:
         )
 
     @staticmethod
-    def on_update(app, old):
-        if app.application_ts != old.application_ts:
-            delta = app.application_ts - old.application_ts
+    def on_update(app, old_ts):
+        if app.application_ts != old_ts:
+            delta = app.application_ts - old_ts
             Event.objects.filter(
                 related_object_id=app.id,
                 related_object_type='APPLICATION'

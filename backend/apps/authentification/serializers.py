@@ -26,3 +26,14 @@ class RegistrationSerializer(serializers.ModelSerializer):
         )
         UserPermissions.objects.create(user=user)  # rôle = CLIENT par défaut
         return user
+
+class EmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+class ResetSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    new_password = serializers.CharField(min_length=8)
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(min_length=8)
+    new_password = serializers.CharField(min_length=8)
