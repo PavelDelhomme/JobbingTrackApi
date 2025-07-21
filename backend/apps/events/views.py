@@ -1,11 +1,15 @@
-from apps.common.viewsets import BaseViewSet
+from apps.common.utils.factory import crud_viewset
 from .models import Event
 from .serializers import EventSerializer
-from backend.apps.common.utils.factory import viewset_factory
 from logic.event_service import EventService
 
-#class EventViewSet(BaseViewSet):
-#    queryset = Event.objects.all()
-#    serializer_class = EventSerializer
+class _EventVS(crud_viewset(Event, EventSerializer)):
+    def perform_create(self, serializer):
+        event = serializer.save(user=self.request.user)
+        EventService.on_create(event)
 
-EventViewSet = viewset_factory(Event, EventSerializer)
+    def perform_update(self, serializer):
+        event = serializer.save()
+        EventService.on_update(event)
+
+EventViewSet = _EventVS

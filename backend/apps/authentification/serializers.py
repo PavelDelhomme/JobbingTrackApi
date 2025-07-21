@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from .models import User, UserPermissions
+from apps.common.serializers_registry import register
 
-
+@register(User)
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model  = User

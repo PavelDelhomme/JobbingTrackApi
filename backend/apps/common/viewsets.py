@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwnerOrReadOnly
 from apps.common.filters import UpdatedAfterFilter
+from logic.sync_service import SyncService
 
 class BaseViewSet(viewsets.ModelViewSet):
     """

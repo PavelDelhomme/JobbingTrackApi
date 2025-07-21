@@ -1,4 +1,3 @@
-# apps/contacts/views.py
 from apps.common.viewsets import BaseViewSet
 from .models import Contact
 from .serializers import ContactSerializer

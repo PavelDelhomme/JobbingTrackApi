@@ -1,4 +1,3 @@
-# apps/calls/views.py
 from apps.common.viewsets import BaseViewSet
 from .models import Call
 from .serializers import CallSerializer
@@ -14,5 +13,5 @@ class CallViewSet(BaseViewSet):
 
     def perform_update(self, serializer):
         old = self.get_object()
-        obj = serializer.save()
-        CallService.on_update(obj, old.call_ts)
+        call = serializer.save()
+        CallService.on_update(call, old.call_ts)
