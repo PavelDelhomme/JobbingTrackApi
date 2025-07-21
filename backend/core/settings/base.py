@@ -8,21 +8,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
-    # Project apps
     'apps.authentification',
     'apps.common',
-    'apps.applications',
-    'apps.calls',
-    'apps.companies',
-    'apps.contacts',
-    'apps.cvs',
-    'apps.events',
-    'apps.followups',
-    'apps.interviews',
-    'apps.profiles',
-    'apps.references',
-    'apps.calendar',
-
+    
     # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +25,19 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_spectacular',
+
+    # Project apps
+    'apps.applications',
+    'apps.calls',
+    'apps.companies',
+    'apps.contacts',
+    'apps.cvs',
+    'apps.events',
+    'apps.followups',
+    'apps.interviews',
+    'apps.profiles',
+    'apps.references',
+    'apps.calendar',
 ]
 
 MIDDLEWARE = [
@@ -119,3 +120,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 AUTH_USER_MODEL = 'authentification.User'
+
+MIGRATION_MODULES = {
+    'admin': 'apps.migrations.admin',
+    'auth': 'apps.migrations.auth',
+}

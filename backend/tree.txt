@@ -148,14 +148,18 @@
 │   ├── profile_service.py
 │   └── sync_service.py
 ├── manage.py
+├── media
 ├── requirements.txt
+├── reset_and_run_server.sh
+├── run_server.sh
 ├── scripts
 │   ├── migrate.sh
 │   └── wait-for-postgres.sh
+├── static
 ├── templates
 │   ├── admin
 │   │   └── base_site.html
 │   └── base.html
 └── tree.txt
 
-30 directories, 129 files
+32 directories, 131 files
