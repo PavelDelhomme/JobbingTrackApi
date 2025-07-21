@@ -123,5 +123,5 @@ AUTH_USER_MODEL = 'authentification.User'
 
 MIGRATION_MODULES = {
     'admin': 'apps.migrations.admin',
-    'auth': 'apps.migrations.auth',
+    'auth': 'apps.migrations.authentification',
 }
