@@ -3,7 +3,9 @@ from apps.common.models.base import BaseModel
 
 class Company(BaseModel):
     name          = models.CharField(max_length=255)
-    type_ref_id   = models.CharField(max_length=36, null=True, blank=True)
+    
+    type_ref_id   = models.ForeignKey('companies.CompanyType', on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')
+    size          = models.CharField(max_length=255, blank=True)
     sector        = models.CharField(max_length=255, blank=True)
     website       = models.URLField(blank=True)
     address       = models.TextField(blank=True)
@@ -24,6 +26,18 @@ class Company(BaseModel):
         db_table = 'companies'
         verbose_name = 'Company'
         verbose_name_plural = 'Companies'
+    
+    def __str__(self):
+        return self.name
+
+
+class CompanyType(BaseModel):
+    name = models.CharField(max_length=255)
+    
+    class Meta:
+        db_table = 'companies_types'
+        verbose_name = 'Company type'
+        verbose_name_plural = 'Company types'
     
     def __str__(self):
         return self.name

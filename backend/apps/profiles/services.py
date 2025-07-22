@@ -1,5 +1,9 @@
 import time
 from datetime import datetime, timedelta
+from uuid import uuid4
+from django.db import transaction
+from apps.profiles.models import UserProfile
+
 
 class ProfileService:
     @staticmethod
@@ -129,3 +133,81 @@ class ProfileService:
             "profile": profile,
             "settings": settings
         }
+    
+    @staticmethod
+    @transaction.atomic
+    def update_profile_settings(user, settings_data):
+        
+        """
+        Met à jour les paramètres du profil utilisateur
+        """
+        from apps.profiles.models import UserProfile, UserSettings
+        
+        # Récupérer ou créer le profil
+        try:
+            profile = UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            profile = ProfileService.create_empty_profile(user)
+        
+        # Récupérer ou créer les paramètres
+        try:
+            settings = UserSettings.objects.get(profile=profile)
+        except UserSettings.DoesNotExist:
+            settings = UserSettings.objects.create(
+                id=str(uuid.uuid4()),
+                profile=profile,
+                user=user,
+                created_at=int(time.time() * 1000),
+                updated_at=int(time.time() * 1000),
+                is_deleted=False,
+                is_archived=False
+            )
+        
+        # Mettre à jour les champs
+        settings.theme = settings_data.get('theme', settings.theme)
+        settings.timezone = settings_data.get('timezone', settings.timezone)
+        settings.notif_email = settings_data.get('notif_email', settings.notif_email)
+        settings.notif_push = settings_data.get('notif_push', settings.notif_push)
+        settings.dashboard_range = settings_data.get('dashboard_range', settings.dashboard_range)
+        settings.sync_interval = settings_data.get('sync_interval', settings.sync_interval)
+        settings.updated_at = int(time.time() * 1000)
+        
+        settings.save()
+        return settings
+    
+    @staticmethod
+    @transaction.atomic
+    def update_user_profile(user, profile_data):
+        """
+        Met à jour le profil de l'utilisateur
+        """
+        from apps.profiles.models import UserProfile
+        
+        # Récupérer ou créer le profil
+        try:
+            profile = UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            profile = ProfileService.create_empty_profile(user)
+        
+        # Mettre à jour les champs
+        profile.bio = profile_data.get('bio', profile.bio)
+        profile.phone = profile_data.get('phone', profile.phone)
+        profile.website = profile_data.get('website', profile.website)
+        profile.linkedin_url = profile_data.get('linkedin_url', profile.linkedin_url)
+        profile.github_url = profile_data.get('github_url', profile.github_url)
+        
+        profile.target_salary_min = profile_data.get('target_salary_min', profile.target_salary_min)
+        profile.target_salary_max = profile_data.get('target_salary_max', profile.target_salary_max)
+        profile.target_locations = profile_data.get('target_locations', profile.target_locations)
+        profile.remote_work_preference = profile_data.get('remote_work_preference', profile.remote_work_preference)
+        
+        profile.email_notifications = profile_data.get('email_notifications', profile.email_notifications)
+        profile.sms_notifications = profile_data.get('sms_notifications', profile.sms_notifications)
+        
+        profile.timezone = profile_data.get('timezone', profile.timezone)
+        profile.notes = profile_data.get('notes', profile.notes)
+        
+        profile.updated_at = int(time.time() * 1000)
+        profile.save()
+        
+        return profile

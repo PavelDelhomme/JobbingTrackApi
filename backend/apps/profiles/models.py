@@ -95,6 +95,30 @@ class UserProfile(BaseModel):
     @property
     def projects(self):
         return Project.objects.filter(user=self.user)
+    
+    @property
+    def cvs(self):
+        return Cv.objects.filter(user=self.user)
+
+    @property
+    def educations(self):
+        return Cv.objects.filter(user=self.user)
+
+    @property
+    def experiences(self):
+        return Cv.objects.filter(user=self.user)
+
+    @property
+    def languages(self):
+        return Cv.objects.filter(user=self.user)
+
+    @property
+    def skills(self):
+        return Cv.objects.filter(user=self.user)
+
+    @property
+    def certificates(self):
+        return Cv.objects.filter(user=self.user)
 
     class Meta:
         db_table = 'user_profiles'

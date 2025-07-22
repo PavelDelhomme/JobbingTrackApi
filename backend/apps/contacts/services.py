@@ -1,9 +1,9 @@
+# apps/contacts/services.py
 import uuid
 import time
 from django.db import transaction
 
 class ContactService:
-
     @staticmethod
     @transaction.atomic
     def create_or_update_contact(data, user):
@@ -30,7 +30,6 @@ class ContactService:
         
         return contact, created
     
-
     @staticmethod
     def create_minimal_contact(name, user, company_id=None, position='', email='', phone=''):
         """

@@ -7,13 +7,38 @@ class Contact(BaseModel):
     email       = models.EmailField(blank=True)
     phone       = models.CharField(max_length=50, blank=True)
 
-    company_id  = models.CharField(max_length=36, null=True, blank=True)
-    company_name= models.CharField(max_length=255, blank=True)
+    # Relations avec ForeignKey
+    company = models.ForeignKey(
+        'companies.Company',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="contacts"
+    )
+    company_name = models.CharField(max_length=255, blank=True) # Pour un accès rapide
 
-    # Références
-    position_ref_id = models.CharField(max_length=36, null=True, blank=True)
-    department_ref_id = models.CharField(max_length=36, null=True, blank=True)
-    contract_type_ref_id = models.CharField(max_length=36, null=True, blank=True)
+    # Références avec ForeignKey
+    position = models.ForeignKey(
+        'references.Reference',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='contacts_by_position'
+    )
+    department = models.ForeignKey(
+        'references.Reference',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='contacts_by_department'
+    )
+    contract_type = models.ForeignKey(
+        'references.Reference',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='contacts_by_contract_type'
+    )
     
     # liaisons
     application_ids = models.JSONField(default=list, blank=True)

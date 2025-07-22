@@ -1,60 +1,57 @@
-# backend/logic/calendar_service.py
+from django.db import transaction
+import uuid
+import time
+from datetime import datetime, timedelta
 from apps.events.models import Event
 from apps.calendar.models import Calendar
-from django.db import transaction
 
 class CalendarService:
     @staticmethod
     def default_calendar(user):
+        """Récupère ou crée le calendrier par défaut de l'utilisateur"""
         cal, _ = Calendar.objects.get_or_create(
             user=user, is_default=True,
             defaults={"name": "Calendrier principal"}
         )
         return cal
-
+    
     @staticmethod
     def events_between(user, start_ts, end_ts):
+        """Récupère les événements entre deux timestamps"""
         return Event.objects.filter(
             user=user,
             start_ts__gte=start_ts,
             start_ts__lte=end_ts,
             is_deleted=False
         )
-        
+    
     @staticmethod
     @transaction.atomic
-    def set_as_default(calendar: Calendar):
-        # Désactive l’ancien calendrier par défaut de l’utilisateur
+    def set_as_default(calendar):
+        """Définit un calendrier comme calendrier par défaut"""
+        # Désactive l'ancien calendrier par défaut de l'utilisateur
         Calendar.objects.filter(
             user=calendar.user, is_default=True
         ).exclude(pk=calendar.pk).update(is_default=False)
-
+        
         calendar.is_default = True
         calendar.save(update_fields=['is_default'])
-@staticmethod
+    
+    @staticmethod
     @transaction.atomic
     def create_or_update_calendar(data, user):
-        """
-        Crée ou met à jour un calendrier
-        """
-        # Créer ou mettre à jour le calendrier
+        """Crée ou met à jour un calendrier"""
         from apps.common.sync import SyncService
         calendar, created = SyncService.update_from_client(
             'calendar.Calendar',
             data,
             user
         )
-        
         return calendar, created
     
     @staticmethod
     def get_upcoming_events(user, days=7):
-        """
-        Récupère les événements à venir pour l'utilisateur
-        """
-        from apps.events.models import Event
-        from datetime import datetime, timedelta
-        
+        """Récupère les événements à venir pour l'utilisateur"""
         # Calculer la date de début (maintenant) et de fin (dans X jours)
         now_ts = int(datetime.now().timestamp() * 1000)
         end_ts = int((datetime.now() + timedelta(days=days)).timestamp() * 1000)
@@ -71,13 +68,7 @@ class CalendarService:
     
     @staticmethod
     def get_events_by_day(user, start_date, end_date):
-        """
-        Récupère les événements groupés par jour
-        """
-        from apps.events.models import Event
-        from datetime import datetime, timedelta
-        import calendar
-        
+        """Récupère les événements groupés par jour"""
         # Convertir les dates en timestamps
         start_ts = int(start_date.timestamp() * 1000)
         end_ts = int(end_date.timestamp() * 1000)

@@ -1,3 +1,4 @@
+# apps/interviews/services.py
 from django.db import transaction
 import uuid
 import time
@@ -7,14 +8,14 @@ class InterviewService:
     @transaction.atomic
     def create_or_update_interview(data, user):
         """
-        Crée ou met à jour une candidature avec gestion des entités liées
+        Crée ou met à jour un entretien avec gestion des entités liées
         """
         # Vérifier si la candidature existe
         application_id = data.get('application_id')
         if not application_id:
             raise ValueError("Un entretien doit être lié à une candidature")
-        
-        # Vérifier si l'entreprise existe, sinon récupèrer celle de la candidature
+            
+        # Vérifier si l'entreprise existe, sinon récupérer celle de la candidature
         company_id = data.get('company_id')
         if not company_id:
             # Récupérer l'entreprise à partir de la candidature
@@ -22,9 +23,9 @@ class InterviewService:
             try:
                 application = Application.objects.get(id=application_id, user=user)
                 if application.company_id:
-                    data['company_id'] = str(application.company.id)
+                    data['company_id'] = str(application.company_id)
                     # Ajouter également company_name pour cohérence
-                    data['company_name'] = application.company.name
+                    data['company_name'] = application.company_name
             except Application.DoesNotExist:
                 raise ValueError("La candidature associée n'existe pas")
         
@@ -56,10 +57,10 @@ class InterviewService:
             data,
             user
         )
-
+        
         # Créer un événement pour cet entretien
         if created:
             from apps.events.services import EventService
             EventService.create_interview_event(interview)
-        
+            
         return interview, created
