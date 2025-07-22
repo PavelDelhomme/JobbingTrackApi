@@ -7,8 +7,16 @@ class Interview(BaseModel):
     duration_minutes = models.IntegerField(null=True, blank=True)
 
     # Relations obligatoires
-    application_id   = models.CharField(max_length=36)
-    company_id       = models.CharField(max_length=36)
+    application = models.ForeignKey(
+        'applications.Application', 
+        on_delete=models.CASCADE,
+        related_name='interviews'
+    )
+    company = models.ForeignKey(
+        'companies.Company', 
+        on_delete=models.PROTECT,  # Empêche la suppression de l'entreprise si des entretiens existent
+        related_name='interviews'
+    )
     
     # Lieu et modalités
     location         = models.CharField(max_length=255, blank=True)

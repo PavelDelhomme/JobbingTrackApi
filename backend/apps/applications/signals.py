@@ -37,3 +37,18 @@ def ensure_company(sender, instance, **kwargs):
             defaults={"sector": "", "notes": ""}
         )
         instance.company_id = company.id
+
+
+@receiver(post_save, sender=Application)
+def application_post_save(sender, instance, created, **kwargs):
+    """
+    Actions à effectuer après la sauvegarde d'une Application
+    """
+    if created:
+        # Création d'un événement
+        from apps.events.services import EventService
+        EventService.create_application_event(instance)
+
+        # Mise à jour du profil utilisateur
+        from apps.profiles.services import ProfileService
+        ProfileService.update_stats(instance.user)

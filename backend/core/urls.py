@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from apps.common.sync import sync_endpoint
+from apps.common.sync import sync_endpoint, client_sync_endpoint
 
 
 urlpatterns = [
@@ -24,14 +24,15 @@ urlpatterns = [
     path('api/profiles/',      include('apps.profiles.urls')),
     path('api/references/',    include('apps.references.urls')),
     path('api/events/',        include('apps.events.urls')),
-]
 
-urlpatterns += [
+    # Documentations
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-]
 
-urlpatterns += [path('api/sync/', sync_endpoint)]
+    # Synchronisation
+    path('api/sync/', sync_endpoint),
+    path('api/client-sync/', client_sync_endpoint),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

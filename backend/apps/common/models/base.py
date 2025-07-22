@@ -2,6 +2,7 @@ import uuid
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+import time
 
 class BaseModel(models.Model):
     """
@@ -28,10 +29,10 @@ class BaseModel(models.Model):
     is_deleted = models.BooleanField(default=False)
     
     # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
-    archived_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.BigIntegerField(default=lambda: int(time.time() * 1000))
+    updated_at = models.BigIntegerField(default=lambda: int(time.time() * 1000))
+    deleted_at = models.BigIntegerField(null=True, blank=True)
+    archived_at = models.BigIntegerField(null=True, blank=True)
     
     class Meta:
         abstract = True
