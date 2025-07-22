@@ -23,7 +23,7 @@ class ApplicationService:
         if not company and company_name:
             from apps.companies.services import CompanyService
             company = CompanyService.create_minimal_company(company_name, user)
-            data['companyç_id'] = str(company.id)
+            data['company_id'] = str(company.id)
         
         # Créer ou mettre à jour l'application via le SyncService
         from apps.common.sync import SyncService

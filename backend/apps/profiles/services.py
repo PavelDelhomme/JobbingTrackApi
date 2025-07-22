@@ -13,7 +13,8 @@ class ProfileService:
         try:
             profile = UserProfile.objects.get(user=user)
         except UserProfile.DoesNotExist:
-            return
+            # Si le profil n'existe pas, le créer
+            profile = ProfileService.create_empty_profile(user)
         
         # Calculer la date d'il y a 7 jours en millisecondes
         seven_days_ago = int((datetime.now() - timedelta(days=7)).timestamp() * 1000)
@@ -57,3 +58,74 @@ class ProfileService:
         ).count()
         
         profile.save()
+        return profile
+
+    @staticmethod
+    def create_empty_profile(user):
+        """
+        Crée un profil vide pour un utilisateur
+        """
+        from apps.profiles.models import UserProfile
+        
+        timestamp = int(time.time() * 1000)
+        profile = UserProfile.objects.create(
+            id=str(uuid.uuid4()),
+            user=user,
+            created_at=timestamp,
+            updated_at=timestamp,
+            is_deleted=False,
+            is_archived=False,
+            # Valeurs par défaut
+            bio="",
+            phone="",
+            website="",
+            linkedin_url="",
+            github_url="",
+            remote_work_preference="HYBRID",
+            timezone="Europe/Paris",
+            email_notifications=True,
+            sms_notifications=False,
+            notes=""
+        )
+        
+        return profile
+    
+    @staticmethod
+    def get_user_data(user):
+        """
+        Récupère toutes les données de l'utilisateur (profil, statistiques, etc.)
+        """
+        from apps.profiles.models import UserProfile, UserSettings
+        
+        try:
+            profile = UserProfile.objects.get(user=user)
+        except UserProfile.DoesNotExist:
+            profile = ProfileService.create_empty_profile(user)
+        
+        try:
+            settings = UserSettings.objects.get(profile=profile)
+        except UserSettings.DoesNotExist:
+            # Créer les paramètres par défaut
+            settings = UserSettings.objects.create(
+                id=str(uuid.uuid4()),
+                profile=profile,
+                user=user,
+                created_at=int(time.time() * 1000),
+                updated_at=int(time.time() * 1000),
+                is_deleted=False,
+                is_archived=False,
+                theme="SYSTEM",
+                timezone="Europe/Paris",
+                notif_email=True,
+                notif_push=True,
+                dashboard_range=7
+            )
+        
+        # Mettre à jour les statistiques
+        ProfileService.update_stats(user)
+        
+        # Construire la réponse
+        return {
+            "profile": profile,
+            "settings": settings
+        }

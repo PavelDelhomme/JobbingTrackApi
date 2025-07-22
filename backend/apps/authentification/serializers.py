@@ -1,39 +1,47 @@
 from rest_framework import serializers
-from .models import User, UserPermissions
-from apps.common.serializers_registry import register
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 
-@register(User)
+User = get_user_model()
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model  = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'is_active', 'is_staff')
+        model = User
+        fields = ('id', 'email', 'first_name', 'last_name', 'is_active', 'date_joined')
+        read_only_fields = ('id', 'is_active', 'date_joined')
 
-
-class RegistrationSerializer(serializers.ModelSerializer):
-    """Inscription : renvoie user + tokens."""
-    password = serializers.CharField(write_only=True, min_length=8)
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
-        model  = User
-        fields = ('email', 'password', 'first_name', 'last_name')
+        model = User
+        fields = ('email', 'password', 'password2', 'first_name', 'last_name')
+        extra_kwargs = {
+            'first_name': {'required': True},
+            'last_name': {'required': True}
+        }
 
-    def create(self, validated):
-        user = User.objects.create_user(
-            email=validated['email'],
-            password=validated['password'],
-            first_name=validated.get('first_name', ''),
-            last_name=validated.get('last_name', '')
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Les mots de passe ne correspondent pas."})
+        return attrs
+
+    def create(self, validated_data):
+        from .services import AuthenticationService
+        
+        user = AuthenticationService.create_user(
+            email=validated_data['email'],
+            password=validated_data['password'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', '')
         )
-        UserPermissions.objects.create(user=user)  # rôle = CLIENT par défaut
+        
         return user
 
 class EmailSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(required=True)
 
 class ResetSerializer(serializers.Serializer):
-    token = serializers.CharField()
-    new_password = serializers.CharField(min_length=8)
-
-class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(min_length=8)
-    new_password = serializers.CharField(min_length=8)
+    token = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, validators=[validate_password])
